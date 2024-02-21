@@ -3,7 +3,8 @@
 #include <memory>
 #include <ctime>
 #include <cassert>
-
+#include <thread>
+#include <chrono>
 #include <SDL.h>
 
 #define DONT_MAKE_A_DLL
@@ -76,7 +77,7 @@ public:
     // Update
     virtual bool Tick() {
 
-        time_t start = clock();
+        const auto start = std::chrono::system_clock::now();
 
         if(upData.gameOver) {
             std::unique_ptr<Map> newMap = std::make_unique<Map>(initData->num_enemies,
@@ -104,12 +105,12 @@ public:
 
         cursor->draw();
 
+        const auto end = std::chrono::system_clock::now();
 
-        time_t end = clock();
+        upData.frametime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 
-        upData.frametime = (end - start);
-
-        SDL_Delay(upData.frametime < 16 ? 16 - upData.frametime : 0);
+        auto ms = std::chrono::duration<uint64_t, std::milli>(upData.frametime < 16 ? 16 - upData.frametime : 0);
+        std::this_thread::sleep_for(ms);
 
         upData.frametime = upData.frametime < 16 ? 16 : upData.frametime;
         return false;

@@ -43,8 +43,8 @@ Map::Map(int asteroids_qty, int max_bullets,
 
     random.seed(time(NULL));
 
-    U_Sprite small("data\\small_asteroid.png");
-    U_Sprite big("data\\big_asteroid.png");
+    U_Sprite small("data/small_asteroid.png");
+    U_Sprite big("data/big_asteroid.png");
     for(int i = 0; i < asteroids_qty;  ++i) {
         Vector2D<int> mapIndeces;
 
